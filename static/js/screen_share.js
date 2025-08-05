@@ -50,17 +50,18 @@ async function StartPush() {
         local_stream = stream; // 保存流对象，以便后续停止
         local_video.srcObject = stream; // HACK: 直接将流设置给 video 标签播放
 
-        pc1.oniceconnectionstatechange = (e) => {
-            OnIceStateChange(pc1, e);
-        };
-        pc1.onicecandidate = (e) => {
-            OnIceCandidate(pc1, e);
-        };
         pc1.addStream(stream); // 将屏幕共享流添加到 pc1
         pc1.createOffer(offer_option).then(
             OnCreateOfferSuccess,
             OnCreateSessionDescrptionError
         );
+
+        pc1.onicecandidate = (e) => {
+            OnIceCandidate(pc1, e);
+        };
+        pc1.oniceconnectionstatechange = (e) => {
+            OnIceStateChange(pc1, e);
+        };
 
         // 监听用户通过浏览器原生UI停止共享的事件
         const video_track = stream.getVideoTracks()[0];
